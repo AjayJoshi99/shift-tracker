@@ -7,7 +7,8 @@ app = Flask(__name__)
 def index():
     result = None
     error = None
-    remaining = None
+    rem_hours = None
+    rem_minutes = None
 
     IST = timezone(timedelta(hours=5, minutes=30))
     now = datetime.now(IST)
@@ -17,20 +18,25 @@ def index():
             hours = float(request.form.get("hours") or 0)
             minutes = float(request.form.get("minutes") or 0)
 
+            # ---- Constraints ----
             if hours < 0 or hours > 8:
                 error = "Hours must be between 0 and 8"
             elif minutes < 0 or minutes >= 60:
                 error = "Minutes must be between 0 and 59"
-            elif hours == 8 and minutes > 0:
+            elif (hours * 60 + minutes) > 480:
                 error = "Total work cannot exceed 8 hours"
             else:
-                worked = (hours * 60) + minutes
-                remaining = 480 - worked
+                worked_minutes = int(hours * 60 + minutes)
+                remaining_minutes = 480 - worked_minutes
 
-                if remaining <= 0:
+                if remaining_minutes <= 0:
                     error = "Your shift is already complete 🎉"
                 else:
-                    end_time = now + timedelta(minutes=remaining)
+                    # ✅ FIX HERE
+                    rem_hours = remaining_minutes // 60
+                    rem_minutes = remaining_minutes % 60
+
+                    end_time = now + timedelta(minutes=remaining_minutes)
                     result = end_time.strftime("%I:%M %p")
 
         except ValueError:
@@ -40,9 +46,9 @@ def index():
         "index.html",
         result=result,
         error=error,
-        remaining=remaining
+        rem_hours=rem_hours,
+        rem_minutes=rem_minutes
     )
 
 if __name__ == "__main__":
     app.run()
-
