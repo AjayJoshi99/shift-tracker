@@ -2,7 +2,7 @@
 
 A simple, clean, and responsive web application that helps employees calculate **when their 8-hour shift will end**, based on the hours and minutes they have already worked.
 
-The project is built using **Flask (Python)** for the backend and **Bootstrap 5** for the frontend, with dynamic **office-themed GIFs powered by the Tenor API** to make the UI more engaging.
+The project is built using **Flask (Python)** for the backend and **Bootstrap 5** for the frontend.
 
 ---
 
